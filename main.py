@@ -1,10 +1,29 @@
 import sys
 import time
+# General imports
+import pytest
+from selenium import webdriver
+
+# Imports to get chrome driver working
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+# Imports to get firefox driver working
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
+
+# Import options for headless mode
+from selenium.webdriver.chrome.options import Options
+
+
 
 import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+# Imports to get firefox driver working
 from selenium.webdriver.firefox.service import Service as FirefoxService
+# Imports to get chrome driver working
+from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 import ImportantVariables as imp_val
@@ -29,18 +48,18 @@ def launch_browser(browser="chrome"):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-        driver = uc.Chrome(options=chrome_options)
-        # driver = uc.Chrome(
-        #     driver_executable_path=ChromeDriverManager(version="134.0.0").install(),  # use a specific 134 version
-        #     options=chrome_options
-        # )
+        chrome_options.add_argument('--headless')  # Run in headless mode
+        chrome_options.add_argument('--no-sandbox')  # Recommended for CI environments
+        chrome_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
+        chrome_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
+        chrome_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
 
-        # driver = uc.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
+        driver = uc.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
     elif browser == "firefox":
         print("Launching Firefox...")
         firefox_options = FirefoxOptions()
-        # firefox_options.add_argument("--headless")
+        firefox_options.add_argument("--headless")
 
         # Set custom Firefox profile directory
         if user_data_directory:
@@ -61,7 +80,8 @@ def launch_browser(browser="chrome"):
 if __name__ == "__main__":
     # Choose browser: "chrome" or "firefox"
     # browser = input("Enter browser (chrome/firefox): ").strip().lower()
-    browser = "firefox"
+    browser = "chrome"
+    # browser = "firefox"
     driver = launch_browser(browser)
 
     try:
