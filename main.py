@@ -1,24 +1,10 @@
 import sys
 import time
-# General imports
-import pytest
-from selenium import webdriver
-
-# Imports to get chrome driver working
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-
-# Imports to get firefox driver working
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.firefox import GeckoDriverManager
-
-# Import options for headless mode
-from selenium.webdriver.chrome.options import Options
-
-
 
 import undetected_chromedriver as uc
 from selenium import webdriver
+# Imports to get chrome driver working
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 # Imports to get firefox driver working
 from selenium.webdriver.firefox.service import Service as FirefoxService
@@ -27,6 +13,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 import ImportantVariables as imp_val
+
+# General imports
+# Imports to get firefox driver working
+# Import options for headless mode
 
 # Important variables
 user_data_directory = imp_val.new_user_data_directory
@@ -67,7 +57,6 @@ def launch_browser(browser="chrome"):
             firefox_options.add_argument(user_data_directory)
 
         driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=firefox_options)
-
 
     else:
         print("Unsupported browser:", browser)
