@@ -43,8 +43,11 @@ def launch_browser(browser="chrome"):
         chrome_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
         chrome_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
         chrome_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
-
         driver = uc.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        # Get the Chrome version
+        version = driver.capabilities['browserVersion']
+        print(f"Chrome Browser Version: {version}")
+        # driver = uc.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
     elif browser == "firefox":
         print("Launching Firefox...")
