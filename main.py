@@ -1,6 +1,5 @@
 import crediantials
 from insta_login import get_instagram_links, save_links_to_json
-from setup_browser import launch_browser
 
 
 def main():
