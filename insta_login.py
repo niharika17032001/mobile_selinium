@@ -3,15 +3,16 @@ import time
 
 from selenium import webdriver
 # Imports to get chrome driver working
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+# Imports to get firefox driver working
+from selenium.webdriver.firefox.service import Service as FirefoxService
+# Imports to get chrome driver working
+from webdriver_manager.firefox import GeckoDriverManager
+
 # Imports to get firefox driver working
 # Imports to get chrome driver working
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.chrome import ChromeDriverManager
-print(ChromeDriverManager().install())
 import ImportantVariables as imp_val
 
 # General imports
@@ -21,73 +22,24 @@ import ImportantVariables as imp_val
 # Important variables
 user_data_directory = imp_val.new_user_data_directory
 profile_directory = "Default"
-chrome_driver_path=imp_val.chrome_driver_path
-chrome_executable_path=imp_val.chrome_executable_path
+chrome_driver_path = imp_val.chrome_driver_path
+chrome_executable_path = imp_val.chrome_executable_path
 
 import crediantials
 
 
-def create_driver(headless=True):
-    print("Launching Chrome...")
-    chrome_options = Options()
-    # if chrome_executable_path:
-    #     chrome_options.binary_location = chrome_executable_path
-    if headless:
-        chrome_options.add_argument('--headless')  # Run in headless mode
-        chrome_options.add_argument('--no-sandbox')  # Recommended for CI environments
-        chrome_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
-        chrome_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
-        chrome_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
+def create_firefox_driver(headless=True):
+    print("Launching Firefox...")
+    firefox_options = FirefoxOptions()
+    # firefox_options.add_argument("--headless")
 
+    # Set custom Firefox profile directory
     if user_data_directory:
-        chrome_options.add_argument(f"--user-data-dir={user_data_directory}")
-    if profile_directory:
-        chrome_options.add_argument(f"--profile-directory={profile_directory}")
+        firefox_options.add_argument(f"-profile")
+        firefox_options.add_argument(user_data_directory)
 
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    # Get the Chrome version
-    version = driver.capabilities['browserVersion']
-    print(f"Chrome Browser Version: {version}")
-
+    driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=firefox_options)
     return driver
-
-
-#
-#
-#
-# def create_driver(headless=True):
-#
-#     print("Launching Chrome...")
-#     chrome_options = uc.ChromeOptions()
-#     if headless:
-#         chrome_options.add_argument('--headless')  # Run in headless mode
-#         chrome_options.add_argument('--no-sandbox')  # Recommended for CI environments
-#         chrome_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
-#         chrome_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
-#         chrome_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
-#
-#
-#
-#     if user_data_directory:
-#         chrome_options.add_argument(f"--user-data-dir={user_data_directory}")
-#     if profile_directory:
-#         chrome_options.add_argument(f"--profile-directory={profile_directory}")
-#
-#     chrome_options.add_argument("--no-sandbox")
-#     chrome_options.add_argument("--disable-gpu")
-#     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-#
-#     driver = uc.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-#     # Get the Chrome version
-#     version = driver.capabilities['browserVersion']
-#     print(f"Chrome Browser Version: {version}")
-#
-#     return driver
-#
 
 
 def is_logged_in(driver):
@@ -117,7 +69,7 @@ def login(username, password, driver):
 
 
 def login_with_browser(username, password):
-    driver = create_driver(headless=False)
+    driver = create_firefox_driver(headless=False)
     driver.get("https://www.instagram.com/accounts/login/")
     time.sleep(4)
     driver.find_element(By.NAME, "username").send_keys(username)
@@ -132,7 +84,7 @@ def login_with_browser(username, password):
 
 def get_instagram_links(username, password, target_username, max_scrolls, max_attempts_without_new_links=3,
                         headless=True):
-    driver = create_driver(headless=headless)
+    driver = create_firefox_driver(headless=headless)
     driver.get("https://www.instagram.com/")
 
     time.sleep(3)
