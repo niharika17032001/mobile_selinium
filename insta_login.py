@@ -1,23 +1,17 @@
 import json
-import os
 import time
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+# Imports to get chrome driver working
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import WebDriverException, NoSuchElementException
-import undetected_chromedriver as uc
-from selenium import webdriver
-# Imports to get chrome driver working
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 # Imports to get firefox driver working
-from selenium.webdriver.firefox.service import Service as FirefoxService
 # Imports to get chrome driver working
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
-
+from webdriver_manager.chrome import ChromeDriverManager
+print(ChromeDriverManager().install())
 import ImportantVariables as imp_val
 
 # General imports
@@ -27,22 +21,23 @@ import ImportantVariables as imp_val
 # Important variables
 user_data_directory = imp_val.new_user_data_directory
 profile_directory = "Default"
+chrome_driver_path=imp_val.chrome_driver_path
+chrome_executable_path=imp_val.chrome_executable_path
 
 import crediantials
 
 
 def create_driver(headless=True):
-
     print("Launching Chrome...")
-    chrome_options = uc.ChromeOptions()
+    chrome_options = Options()
+    # if chrome_executable_path:
+    #     chrome_options.binary_location = chrome_executable_path
     if headless:
         chrome_options.add_argument('--headless')  # Run in headless mode
         chrome_options.add_argument('--no-sandbox')  # Recommended for CI environments
         chrome_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
         chrome_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
         chrome_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
-
-
 
     if user_data_directory:
         chrome_options.add_argument(f"--user-data-dir={user_data_directory}")
@@ -53,13 +48,46 @@ def create_driver(headless=True):
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 
-    driver = uc.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     # Get the Chrome version
     version = driver.capabilities['browserVersion']
     print(f"Chrome Browser Version: {version}")
 
     return driver
 
+
+#
+#
+#
+# def create_driver(headless=True):
+#
+#     print("Launching Chrome...")
+#     chrome_options = uc.ChromeOptions()
+#     if headless:
+#         chrome_options.add_argument('--headless')  # Run in headless mode
+#         chrome_options.add_argument('--no-sandbox')  # Recommended for CI environments
+#         chrome_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
+#         chrome_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
+#         chrome_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
+#
+#
+#
+#     if user_data_directory:
+#         chrome_options.add_argument(f"--user-data-dir={user_data_directory}")
+#     if profile_directory:
+#         chrome_options.add_argument(f"--profile-directory={profile_directory}")
+#
+#     chrome_options.add_argument("--no-sandbox")
+#     chrome_options.add_argument("--disable-gpu")
+#     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+#
+#     driver = uc.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+#     # Get the Chrome version
+#     version = driver.capabilities['browserVersion']
+#     print(f"Chrome Browser Version: {version}")
+#
+#     return driver
+#
 
 
 def is_logged_in(driver):
@@ -71,6 +99,7 @@ def is_logged_in(driver):
         return False
     print("Session is active.")
     return True
+
 
 def login(username, password, driver):
     driver.get("https://www.instagram.com/accounts/login/")
@@ -100,7 +129,9 @@ def login_with_browser(username, password):
     is_logged_in(driver)
     driver.quit()
 
-def get_instagram_links(username, password, target_username, max_scrolls, max_attempts_without_new_links=3,headless=True):
+
+def get_instagram_links(username, password, target_username, max_scrolls, max_attempts_without_new_links=3,
+                        headless=True):
     driver = create_driver(headless=headless)
     driver.get("https://www.instagram.com/")
 
@@ -138,15 +169,17 @@ def get_instagram_links(username, password, target_username, max_scrolls, max_at
     driver.quit()
     return list(links)
 
+
 def save_links_to_json(links, filename="instagram_links.json"):
     with open(filename, "w", encoding="utf-8") as file:
         json.dump(links, file, indent=4)
+
 
 if __name__ == "__main__":
     username = crediantials.USER
     password = crediantials.PWD
     target_username = "tamannaahspeaks"
 
-    post_links = get_instagram_links(username, password, target_username, 3,headless=False)
+    post_links = get_instagram_links(username, password, target_username, 3, headless=False)
     save_links_to_json(post_links)
     print(f"Extracted {len(post_links)} links saved to instagram_links.json")

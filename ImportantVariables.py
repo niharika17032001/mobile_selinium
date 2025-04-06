@@ -29,3 +29,7 @@ print("new_user_data_directory : \t", new_user_data_directory)
 
 if not os.path.exists(new_user_data_directory):
     os.makedirs(new_user_data_directory)
+
+
+chrome_driver_path=current_Folder_Path +"/chromedriver.exe"
+chrome_executable_path	=current_Folder_Path + "/chrome.exe"
