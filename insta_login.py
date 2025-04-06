@@ -31,6 +31,12 @@ import crediantials
 def create_firefox_driver(headless=True):
     print("Launching Firefox...")
     firefox_options = FirefoxOptions()
+    if headless:
+        firefox_options.add_argument('--headless')  # Run in headless mode
+        firefox_options.add_argument('--no-sandbox')  # Recommended for CI environments
+        firefox_options.add_argument('--disable-dev-shm-usage')  # Avoid /dev/shm issues in CI
+        firefox_options.add_argument('--disable-gpu')  # Optional: Disable GPU usage
+        firefox_options.add_argument('--window-size=1920,1080')  # Ensure proper resolution
     # firefox_options.add_argument("--headless")
 
     # Set custom Firefox profile directory
