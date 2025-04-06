@@ -5,7 +5,7 @@ from selenium import webdriver
 # Imports to get chrome driver working
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+
 
 # Imports to get firefox driver working
 # Imports to get chrome driver working
@@ -29,7 +29,7 @@ import crediantials
 
 def create_firefox_driver(headless=True):
     print("Launching Firefox...")
-    firefox_options = FirefoxOptions()
+    firefox_options = webdriver.FirefoxOptions()
     if headless:
         firefox_options.add_argument('--headless')  # Run in headless mode
         firefox_options.add_argument('--no-sandbox')  # Recommended for CI environments
