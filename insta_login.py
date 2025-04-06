@@ -6,14 +6,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-# Imports to get firefox driver working
-from selenium.webdriver.firefox.service import Service as FirefoxService
-# Imports to get chrome driver working
-from webdriver_manager.firefox import GeckoDriverManager
 
 # Imports to get firefox driver working
 # Imports to get chrome driver working
 import ImportantVariables as imp_val
+
+# Imports to get firefox driver working
+# Imports to get chrome driver working
 
 # General imports
 # Imports to get firefox driver working
@@ -44,7 +43,7 @@ def create_firefox_driver(headless=True):
         firefox_options.add_argument(f"-profile")
         firefox_options.add_argument(user_data_directory)
 
-    driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=firefox_options)
+    driver = webdriver.Firefox(options=firefox_options)
     return driver
 
 
