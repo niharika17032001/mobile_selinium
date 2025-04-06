@@ -68,6 +68,7 @@ def login(username, password, driver):
     pass_input.send_keys(password)
     pass_input.send_keys(Keys.ENTER)
     time.sleep(10)
+    driver.save_screenshot(imp_val.screenshot_path + 'login.png')
     if "login" in driver.current_url:
         raise Exception("Login failed.")
     else:
@@ -96,10 +97,11 @@ def get_instagram_links(username, password, target_username, max_scrolls, max_at
     time.sleep(3)
     if not is_logged_in(driver):
         login(username, password, driver)
-
+    driver.save_screenshot(imp_val.screenshot_path + '1.png')
     instagram_url = f"https://www.instagram.com/{target_username}/reels/"
     driver.get(instagram_url)
     time.sleep(5)
+    driver.save_screenshot(imp_val.screenshot_path + '2.png')
 
     links = set()
     attempts_without_new_links = 0
@@ -123,6 +125,7 @@ def get_instagram_links(username, password, target_username, max_scrolls, max_at
 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(3)
+    driver.save_screenshot(imp_val.screenshot_path + '3.png')
 
     driver.quit()
     return list(links)

@@ -15,9 +15,9 @@ current_Folder_Path = os.path.dirname(file_path)
 # print(root_folder)
 yt_links_for_facebook = "/json_files/yt_links_for_facebook.json"
 
-screenshot_path = current_Folder_Path + '/reports/screenshot.png'
 page_source_html= current_Folder_Path+"/reports/page_source.html"
 reports_path = current_Folder_Path + '/reports/'
+screenshot_path = reports_path + 'screenshot'
 imp_json_files_folder = current_Folder_Path + "/imp_json_files/"
 cookies_txt_file=reports_path+"main_cookies.txt"
 cookie_json_file=reports_path+"main_cookies.json"
@@ -29,6 +29,8 @@ print("new_user_data_directory : \t", new_user_data_directory)
 
 if not os.path.exists(new_user_data_directory):
     os.makedirs(new_user_data_directory)
+if not os.path.exists(reports_path):
+    os.makedirs(reports_path)
 
 
 chrome_driver_path=current_Folder_Path +"/chromedriver.exe"
